@@ -1,4 +1,4 @@
-import mongose, { Schema } from "mongoose";
+import mongose from "mongoose";
 
 const Schema = mongose.Schema;;
 
@@ -8,4 +8,6 @@ const filmSchema = new Schema ({
   kindName: String,
 });
 
-module.exports = mongose.model("film", filmSchema);
+const Film = mongose.model("film", filmSchema);
+
+export default Film;
