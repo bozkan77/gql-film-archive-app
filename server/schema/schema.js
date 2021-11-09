@@ -1,5 +1,7 @@
 import graphql from "graphql";
 import _ from  "lodash";
+import Kind from "../models/kind.js";
+import Film from "../models/film.js";
 
 const {
   GraphQLObjectType,
@@ -14,7 +16,7 @@ const FilmType = new GraphQLObjectType({
   name: 'Film',
   fields: ()=> ({
     id: {type: GraphQLID},
-    name: {type: GraphQLString}, 
+    filmName: {type: GraphQLString}, 
     kind: {
       type: KindType,
       resolve(parent, args){
@@ -74,6 +76,39 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addKind: {
+      type: KindType,
+      args: {
+        kindName: {type: GraphQLString}
+      },
+      resolve(parent, args){
+        let kind = new Kind({
+          kindName: args.kindName
+        });
+        return kind.save();
+      }
+    },
+    addFilm: {
+      type: FilmType,
+      args: {
+        filmName: {type: GraphQLString},
+        kindId: {type: GraphQLID}
+      },
+      resolve(parent, args){
+        let film = new Film({
+          filmName: args.filmName,
+          kindId: args.kindId
+        });
+        return film.save();
+      }
+    }
+  }
+});
+
 export let schema = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 })

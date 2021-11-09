@@ -1,10 +1,12 @@
-import mongose, { Schema } from "mongoose";
+import mongose from "mongoose";
 
-const Schema = mongose.Schema;;
+const Schema = mongose.Schema;
 
 const kindSchema = new Schema ({
   id: String,
   kindName: String,
 });
 
-module.exports = mongose.model("kind", kindSchema);
+const Kind = mongose.model("kind", kindSchema);
+
+export default Kind;
