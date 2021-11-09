@@ -5,19 +5,10 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLList
 } = graphql;
 
-let films = [
-  {id: '1', name: "Film 1", kindId:"tür 1" },
-  {id: '2', name: "Film 2", kindId: "tür 2" },
-  {id: '3', name: "Film 3", kindId: "tür 1" },
-]
-
-let kinds = [
-  {id: '1', kindName: "tür 1" },
-  {id: '2', kindName: "tür 2" },
-]
 
 const FilmType = new GraphQLObjectType({
   name: 'Film',
@@ -27,7 +18,7 @@ const FilmType = new GraphQLObjectType({
     kind: {
       type: KindType,
       resolve(parent, args){
-        console.log(parent)
+        //return _.find(kinds, {id: parent.kindId})
       }
     }
   }),
@@ -37,7 +28,13 @@ const KindType = new GraphQLObjectType({
   name: 'Kind',
   fields: ()=> ({
     id: {type: GraphQLID},
-    kindName: {type: GraphQLString}
+    kindName: {type: GraphQLString},
+    films: {
+      type: new GraphQLList(FilmType),
+      resolve(parent,args){
+        // return _.filter(films, {kindId: parent.id})
+      }
+    }
   }),
 });
 
@@ -50,7 +47,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args){
         //db den gelecek
   
-        return _.find(filmler, {id: args.id})
+        // return _.find(films, {id: args.id})
       }
     },
     kind: {
@@ -59,7 +56,19 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args){
         //db den gelecek
   
-        return _.find(kinds, {id: args.id})
+        // return _.find(kinds, {id: args.id})
+      }
+    },
+    films: {
+      type: new GraphQLList(FilmType),
+      resolve(parent, args){
+        // return films
+      }
+    },
+    kinds:{
+      type: new GraphQLList(KindType),
+      resolve(parent, args){
+        // return kinds
       }
     }
   }
